@@ -71,23 +71,18 @@ class Property
   #   return prop.map{|prope| Property.new(prope)}
   # end
 
-  ####
-  # def find_by_id()
-  #   db = PG.connect({dbname: 'properties', host: 'localhost'})
-  #   sql = "SELECT * FROM properties WHERE id = $1"
-  #   values = [@id]
-  #   db.prepare("find", sql)
-  #   db.exec_prepared("find", values)
-  #   db.close
-  # end
-
-  def Property.find(category, category_value)
+  def Property.find(column_name, value)
     db = PG.connect({dbname: 'properties', host: 'localhost'})
-    sql = "SELECT * FROM properties WHERE #{category} = '#{category_value}'"
+    sql = "SELECT * FROM properties WHERE #{column_name} = $1"
     db.prepare("find", sql)
-    prop = db.exec_prepared("find")
+    values = [value]
+    pg_result = db.exec_prepared("find", values)
     db.close()
-    return prop.map{|prope| Property.new(prope)}
+    if pg_result.first != nil
+      Property.new(pg_result.first)
+    else
+      return nil
+    end
   end
 
 end

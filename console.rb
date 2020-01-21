@@ -33,6 +33,7 @@ property1.delete()
 property2.value = 85000
 property2.update()
 
+binding.pry
 Property.find('id', 5)
 
 
